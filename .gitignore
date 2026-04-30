@@ -1,0 +1,12 @@
+# Ignorar la carpeta de binarios y plugins (lo que causó el error)
+.terraform/
+
+# Ignorar archivos de estado (contienen información sensible de tu infra)
+*.tfstate
+*.tfstate.*
+
+# Ignorar variables secretas
+*.tfvars
+
+# Archivos temporales
+.terraform.lock.hcl
