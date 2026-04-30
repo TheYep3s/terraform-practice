@@ -10,20 +10,37 @@ resource "aws_instance" "nginx-server" {
 
   user_data = <<-EOF
               #!/bin/bash
-              sudo apt install -y nginx
+              sudo yum install -y nginx
               sudo systemctl enable nginx
               sudo systemctl start nginx
               EOF
 
   key_name               = aws_key_pair.nginx-server-ssh.key_name
   vpc_security_group_ids = [aws_security_group.nginx-server-sg.id]
+
+  tags = {
+    Name        = "nginx-server"
+    Environment = "test"
+    Owner       = "yepesbelike@gmail.com"
+    Team        = "DevOps"
+    Project     = "Terraform Practice"
+  }
 }
 
 ### ssh ###
 resource "aws_key_pair" "nginx-server-ssh" {
   key_name   = "nginx-server-ssh"
   public_key = file("nginx-server.key.pub")
+
+  tags = {
+    Name        = "nginx-server-ssh"
+    Environment = "test"
+    Owner       = "yepesbelike@gmail.com"
+    Team        = "DevOps"
+    Project     = "Terraform Practice"
+  }
 }
+
 
 ### SH ###
 resource "aws_security_group" "nginx-server-sg" {
@@ -50,4 +67,22 @@ resource "aws_security_group" "nginx-server-sg" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+
+  tags = {
+    Name        = "nginx-server-sg"
+    Environment = "test"
+    Owner       = "yepesbelike@gmail.com"
+    Team        = "DevOps"
+    Project     = "Terraform Practice"
+  }
+}
+
+output "server_public_ip" {
+  description = "Direccion IP publica de la instancia EC2"
+  value       = aws_instance.nginx-server.public_ip
+}
+
+output "server_public_dns" {
+  description = "DNS publico de la instancia EC2"
+  value       = aws_instance.nginx-server.public_dns
 }
